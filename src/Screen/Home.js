@@ -1,45 +1,71 @@
 import axios from 'axios';
-import React, {useState, useEffect} from 'react';
-import {ScrollView, StyleSheet, ActivityIndicator, View} from 'react-native';
-import {CardSurat} from '../Components';
+import React, {useEffect, useState, useCallback} from 'react';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  RefreshControl,
+} from 'react-native';
+import {FlatList} from 'react-native-gesture-handler';
+import {CardSurat, CardDetailSurah} from '../Components';
 
 const Home = ({navigation}) => {
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [surat, setSurat] = useState(1);
+  const [loading, setLoading] = useState(false);
 
-  const getData = async () => {
-    try {
-      const response = await axios.get('quran/ar.alafasy');
-      const result = await response.data.data;
-      setData(result);
-      setLoading(false);
-      console.log(result);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  console.log('data ==> ', data);
 
   useEffect(() => {
     getData();
+    return () => getData;
+  }, [surat]);
+
+  const getData = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`surah/${surat}/ar.alafasy`);
+      const result = await response.data.data;
+      setData(curren => [...curren, result]);
+      setLoading(false);
+    } catch (erro) {
+      console.log(erro);
+    }
+  };
+
+  const renderCard = ({item}) => (
+    <View style={styles.Divider}>
+      <CardSurat
+        key={item.number}
+        name={item.name}
+        title={item.englishName}
+        text={item.text}
+      />
+    </View>
+  );
+
+  const loadAgain = () => {
+    setSurat(curren => curren + 1);
+  };
+
+  const loadmore = useCallback(() => {
+    loadAgain();
   }, []);
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-      {loading ? (
-        <ActivityIndicator size={30} color="red" />
-      ) : (
-        data.surahs.map(surah => (
-          <View style={styles.Divider}>
-            <CardSurat
-              key={surah.number}
-              name={surah.name}
-              title={surah.englishName}
-              onPress={() => navigation.navigate('Surahs', {id: surah.number})}
-            />
-          </View>
-        ))
-      )}
-    </ScrollView>
+    <FlatList
+      data={data}
+      renderItem={renderCard}
+      keyExtractor={(item, index) => index.toString()}
+      onEndReached={loadmore}
+      onEndReachedThreshold={0}
+      maxToRenderPerBatch={13}
+      refreshControl={
+        <RefreshControl refreshing={loading} size={30} onRefresh={loadmore} />
+      }
+      refreshing={loading}
+      showsVerticalScrollIndicator={false}
+    />
   );
 };
 
@@ -47,7 +73,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    padding: 10,
+    padding: 19,
   },
   Teks: {
     fontSize: 20,
@@ -56,6 +82,7 @@ const styles = StyleSheet.create({
   IconHome: {color: 'red', fontSize: 40},
   Divider: {
     marginVertical: 5,
+    flex: 1,
   },
 });
 

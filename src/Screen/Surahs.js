@@ -8,6 +8,10 @@ const Surahs = ({route}) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    getData();
+  }, []);
+
   const getData = async () => {
     try {
       setLoading(true);
@@ -20,11 +24,6 @@ const Surahs = ({route}) => {
       console.log(err);
     }
   };
-
-  useEffect(() => {
-    getData();
-  }, []);
-
   return (
     <View>
       <CardDetailSurah name={data.name} title={data.englishName} />
