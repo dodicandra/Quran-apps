@@ -4,13 +4,8 @@ import {CardDetailSurah} from '../Components';
 import axios from 'axios';
 
 const Surahs = ({route}) => {
-  const {id} = route.params;
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   const getData = async () => {
     try {
@@ -26,7 +21,7 @@ const Surahs = ({route}) => {
   };
   return (
     <View>
-      <CardDetailSurah name={data.name} title={data.englishName} />
+      <CardDetailSurah />
     </View>
   );
 };

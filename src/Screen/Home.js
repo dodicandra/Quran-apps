@@ -1,32 +1,40 @@
 import axios from 'axios';
-import React, {useEffect, useState, useCallback} from 'react';
-import {
-  ActivityIndicator,
-  StyleSheet,
-  View,
-  RefreshControl,
-} from 'react-native';
+import {Icon, Input, Item} from 'native-base';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, Dimensions, StyleSheet, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import {CardSurat, CardDetailSurah} from '../Components';
+import {CardSurat} from '../Components';
+
+const {width, height} = Dimensions.get('window');
 
 const Home = ({navigation}) => {
   const [data, setData] = useState([]);
-  const [surat, setSurat] = useState(1);
+  const [dataFilter, setDataFilter] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  console.log('data ==> ', data);
 
   useEffect(() => {
     getData();
     return () => getData;
-  }, [surat]);
+  }, []);
+
+  const SearchFilter = event => {
+    const searchtext = event.nativeEvent.text;
+    const Teks = searchtext.trim().toLowerCase();
+    const {surahs} = dataFilter;
+
+    const newData = surahs.filter(item =>
+      item.englishName.toLowerCase().match(Teks),
+    );
+    setData({surahs: newData});
+  };
 
   const getData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`surah/${surat}/ar.alafasy`);
+      const response = await axios.get('quran/ar.alafasy');
       const result = await response.data.data;
-      setData(curren => [...curren, result]);
+      setData(result);
+      setDataFilter(result);
       setLoading(false);
     } catch (erro) {
       console.log(erro);
@@ -44,28 +52,28 @@ const Home = ({navigation}) => {
     </View>
   );
 
-  const loadAgain = () => {
-    setSurat(curren => curren + 1);
-  };
-
-  const loadmore = useCallback(() => {
-    loadAgain();
-  }, []);
-
   return (
-    <FlatList
-      data={data}
-      renderItem={renderCard}
-      keyExtractor={(item, index) => index.toString()}
-      onEndReached={loadmore}
-      onEndReachedThreshold={0}
-      maxToRenderPerBatch={13}
-      refreshControl={
-        <RefreshControl refreshing={loading} size={30} onRefresh={loadmore} />
-      }
-      refreshing={loading}
-      showsVerticalScrollIndicator={false}
-    />
+    <>
+      <View style={styles.homeCard}>
+        <View style={styles.containerCard}>
+          <Item style={styles.searchInput}>
+            <Icon name="ios-search" />
+            <Input placeholder="Search" onChange={e => SearchFilter(e)} />
+          </Item>
+        </View>
+      </View>
+      {loading ? (
+        <ActivityIndicator color="blue" size={40} />
+      ) : (
+        <FlatList
+          data={data.surahs}
+          renderItem={renderCard}
+          maxToRenderPerBatch={20}
+          keyExtractor={(item, index) => index.toString()}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
+    </>
   );
 };
 
@@ -83,6 +91,22 @@ const styles = StyleSheet.create({
   Divider: {
     marginVertical: 5,
     flex: 1,
+  },
+  homeCard: {
+    width: width,
+    height: 250,
+    backgroundColor: '#aeaeae',
+  },
+  searchInput: {
+    backgroundColor: 'white',
+    padding: 5,
+    borderRadius: 7,
+  },
+  containerCard: {
+    padding: 10,
+    position: 'absolute',
+    bottom: 0,
+    width,
   },
 });
 
