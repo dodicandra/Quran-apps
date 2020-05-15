@@ -2,13 +2,13 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Card, View, CardItem, Text, Body} from 'native-base';
 
-export const CardSurat = ({title, name, onPress}) => {
+export const CardSurat = ({title, name}) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity>
       <Card style={styles.leftColor}>
         <CardItem header bordered>
-          <Text>{title}</Text>
-          <Text style={{marginLeft: 15}}>{name}</Text>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.surah}>{name}</Text>
         </CardItem>
       </Card>
     </TouchableOpacity>
@@ -32,9 +32,10 @@ export const CardDetailSurah = ({title, name, text}) => {
 
 const styles = StyleSheet.create({
   leftColor: {
-    borderLeftWidth: 5,
-    borderLeftColor: 'red',
     flexDirection: 'row',
-    marginVertical: 20,
+    padding: 5,
+    borderRadius: 10,
   },
+  title: {fontSize: 20, color: '#5067FF', fontWeight: '700'},
+  surah: {marginLeft: 15, fontSize: 18, fontWeight: '700'},
 });
