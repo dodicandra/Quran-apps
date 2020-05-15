@@ -2,9 +2,13 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Card, View, CardItem, Text, Body} from 'native-base';
 
-export const CardSurat = ({title, name}) => {
+const compare = (prev, next) => {
+  return JSON.stringify(prev) === JSON.stringify(next);
+};
+
+export const CardSurat = React.memo(({title, name, onPress}) => {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={onPress}>
       <Card style={styles.leftColor}>
         <CardItem header bordered>
           <Text style={styles.title}>{title}</Text>
@@ -13,7 +17,7 @@ export const CardSurat = ({title, name}) => {
       </Card>
     </TouchableOpacity>
   );
-};
+}, compare);
 export const CardDetailSurah = ({title, name, text}) => {
   return (
     <Card style={styles.leftColor}>

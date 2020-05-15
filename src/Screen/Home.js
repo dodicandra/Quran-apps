@@ -13,6 +13,7 @@ import {Text} from 'native-base';
 import {FlatList} from 'react-native-gesture-handler';
 import moment from 'moment';
 import {CardSurat} from '../Components';
+import DigitalClock from '../Components/DigitalJam';
 
 const {width, height} = Dimensions.get('window');
 
@@ -20,19 +21,11 @@ const Home = ({navigation}) => {
   const [data, setData] = useState([]);
   const [dataFilter, setDataFilter] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [date, setDate] = useState(new Date());
 
   console.log('kok');
 
   useEffect(() => {
     getLocal();
-    getDATE();
-  }, []);
-
-  const getDATE = useCallback(() => {
-    setInterval(() => {
-      setDate(new Date());
-    }, 1000);
   }, []);
 
   const SearchFilter = event => {
@@ -106,7 +99,12 @@ const Home = ({navigation}) => {
   };
 
   const renderCard = ({item}) => (
-    <CardSurat key={item.number} name={item.name} title={item.englishName} />
+    <CardSurat
+      key={item.number}
+      name={item.name}
+      title={item.englishName}
+      onPress={() => navigation.navigate('Surahs')}
+    />
   );
 
   const MemoRender = useMemo(() => renderCard, []);
@@ -115,9 +113,7 @@ const Home = ({navigation}) => {
     <View style={{flex: 1}}>
       <View style={styles.homeCard}>
         <View style={styles.containerCard}>
-          <Text style={styles.times}>
-            {moment(date).format('DD - MMMM / hh : mm : ss')}
-          </Text>
+          <DigitalClock />
           <Item style={styles.searchInput}>
             <Icon name="ios-search" />
             <Input
@@ -134,7 +130,7 @@ const Home = ({navigation}) => {
         <FlatList
           data={data.surahs}
           renderItem={MemoRender}
-          maxToRenderPerBatch={20}
+          maxToRenderPerBatch={15}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
         />
