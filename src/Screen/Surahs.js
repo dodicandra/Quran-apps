@@ -1,9 +1,10 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react-hooks/exhaustive-deps */
 import axios from 'axios';
 import {Text} from 'native-base';
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Alert, Modal, StyleSheet, TouchableHighlight, View} from 'react-native';
 import {CardDetailSurah} from '../Components';
-import IconsPlay from '../Components/IconPlay';
 import {Context} from '../hooks/Provider';
 
 const Surahs = ({route}) => {

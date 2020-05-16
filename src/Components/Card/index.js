@@ -1,15 +1,9 @@
 import {Body, Card, CardItem, Content, Text, View} from 'native-base';
-import React, {useState, useContext} from 'react';
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  TouchableHighlight,
-  TouchableOpacity,
-} from 'react-native';
-import IconsPlay from '../IconPlay';
+import React, {useContext} from 'react';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 import {Context} from '../../hooks/Provider';
+import IconsPlay from '../IconPlay';
 
 const compare = (prev, next) => {
   return JSON.stringify(prev) === JSON.stringify(next);
@@ -47,10 +41,6 @@ export const CardDetailSurah = React.memo(({title, name, ayat}) => {
   const playing = async ayah => {
     play(ayah.numberInSurah, ayah.audio);
     setModalPlay(true);
-  };
-
-  const paused = () => {
-    TrackPlayer.pause();
   };
 
   return (

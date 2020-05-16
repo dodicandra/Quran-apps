@@ -13,7 +13,7 @@ import {FlatList} from 'react-native-gesture-handler';
 import {CardSurat} from '../Components';
 import DigitalClock from '../Components/DigitalJam';
 
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const Home = ({navigation}) => {
   const [data, setData] = useState([]);
@@ -94,15 +94,6 @@ const Home = ({navigation}) => {
       console.log(err);
     }
   }, [getData]);
-
-  // hanya untuk testing
-  const removeLocal = async () => {
-    try {
-      await AsyncStorage.removeItem('Quran');
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const renderCard = useCallback(
     ({item}) => (

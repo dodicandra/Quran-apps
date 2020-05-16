@@ -1,9 +1,8 @@
-import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
+import React from 'react';
+import Provider from '../hooks/Provider';
 import Home from '../Screen/Home';
 import Surahs from '../Screen/Surahs';
-import Modal from '../Screen/Modal';
-import Provider from '../hooks/Provider';
 
 const RootStack = createStackNavigator();
 
