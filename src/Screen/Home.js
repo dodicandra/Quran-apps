@@ -8,10 +8,13 @@ import {
   Dimensions,
   StyleSheet,
   View,
+  ImageBackground,
+  StatusBar,
 } from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {CardSurat} from '../Components';
 import DigitalClock from '../Components/DigitalJam';
+import Masjid from '../assets/image/masjid.png';
 
 const {width} = Dimensions.get('window');
 
@@ -111,7 +114,11 @@ const Home = ({navigation}) => {
 
   return (
     <View style={{flex: 1}}>
-      <View style={styles.homeCard}>
+      <StatusBar showHideTransition="slide" barStyle="dark-content" />
+      <ImageBackground
+        source={Masjid}
+        resizeMode="cover"
+        style={styles.homeCard}>
         <View style={styles.containerCard}>
           <DigitalClock />
           <Item style={styles.searchInput}>
@@ -123,7 +130,7 @@ const Home = ({navigation}) => {
             />
           </Item>
         </View>
-      </View>
+      </ImageBackground>
       {loading ? (
         <ActivityIndicator color="blue" size={40} />
       ) : (

@@ -3,7 +3,14 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 
 const IconsPlay = ({onPressPlay}) => {
-  return <Icon name="pulse" style={styles.Icons} onPress={onPressPlay} />;
+  return (
+    <Icon
+      type="SimpleLineIcons"
+      name="control-play"
+      style={styles.Icons}
+      onPress={onPressPlay}
+    />
+  );
 };
 
 const styles = StyleSheet.create({

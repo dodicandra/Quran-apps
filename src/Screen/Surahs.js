@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from 'axios';
-import {Text} from 'native-base';
+import {Text, Icon} from 'native-base';
 import React, {useContext, useEffect, useState} from 'react';
 import {Alert, Modal, StyleSheet, TouchableHighlight, View} from 'react-native';
 import {CardDetailSurah} from '../Components';
@@ -10,7 +10,14 @@ import {Context} from '../hooks/Provider';
 const Surahs = ({route}) => {
   const {id} = route.params;
 
-  const {stopPlay, modalPlay, setModalPlay} = useContext(Context);
+  const {
+    stopPlay,
+    modalPlay,
+    setModalPlay,
+    pausePlay,
+    paused,
+    played,
+  } = useContext(Context);
 
   const [data, setData] = useState([]);
 
@@ -45,17 +52,35 @@ const Surahs = ({route}) => {
         animationType="slide"
         transparent={true}
         visible={modalPlay}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}>
+        onRequestClose={modalPress}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
+            {paused ? (
+              <TouchableHighlight
+                style={{...styles.openButton, backgroundColor: '#2196F3'}}
+                onPress={played}>
+                <Icon
+                  type="Entypo"
+                  name="controller-play"
+                  style={styles.textStyle}
+                />
+              </TouchableHighlight>
+            ) : (
+              <TouchableHighlight
+                style={{...styles.openButton, backgroundColor: '#2196F3'}}
+                onPress={pausePlay}>
+                <Icon type="Feather" name="pause" style={styles.textStyle} />
+              </TouchableHighlight>
+            )}
 
             <TouchableHighlight
-              style={{...styles.openButton, backgroundColor: '#2196F3'}}
+              style={{...styles.openButton, backgroundColor: 'red'}}
               onPress={modalPress}>
-              <Text style={styles.textStyle}>Hide Modal</Text>
+              <Icon
+                type="Entypo"
+                name="controller-stop"
+                style={styles.textStyle}
+              />
             </TouchableHighlight>
           </View>
         </View>
@@ -77,9 +102,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 35,
     alignItems: 'center',
+    justifyContent: 'space-around',
     shadowColor: '#000',
     width: '90%',
-    height: '70%',
+    height: '30%',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -87,12 +113,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    flexDirection: 'row',
   },
   openButton: {
-    backgroundColor: '#F194FF',
-    borderRadius: 20,
+    borderRadius: 100,
     padding: 10,
+    height: 70,
+    width: 70,
     elevation: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textStyle: {
     color: 'white',
