@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import moment from 'moment';
 
 const compare = (prev, next) => {
@@ -26,14 +26,17 @@ const DigitalClock = React.memo(() => {
   }, [call]);
 
   return (
-    <Text style={styles.times}>
-      {moment(date).format('DD - MMMM / hh : mm : ss')}
-    </Text>
+    <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+      <Text style={styles.times}>{moment(date).format('DD - MMMM / ')}</Text>
+      <Text style={{...styles.times, fontSize: 16}}>
+        {moment(date).format(' hh : mm : ss')}
+      </Text>
+    </View>
   );
 }, compare);
 
 const styles = StyleSheet.create({
-  times: {marginBottom: 20, fontSize: 25, fontWeight: 'bold'},
+  times: {marginBottom: 15, fontSize: 25, fontWeight: 'bold'},
 });
 
 export default DigitalClock;

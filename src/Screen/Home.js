@@ -1,20 +1,21 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import {Icon, Input, Item} from 'native-base';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState, useMemo} from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Animated,
   Dimensions,
+  StatusBar,
   StyleSheet,
   View,
-  ImageBackground,
-  StatusBar,
+  ScrollView,
 } from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
+import Masjid from '../assets/image/masjid.png';
 import {CardSurat} from '../Components';
 import DigitalClock from '../Components/DigitalJam';
-import Masjid from '../assets/image/masjid.png';
 
 const {width} = Dimensions.get('window');
 
@@ -35,12 +36,12 @@ const Home = ({navigation}) => {
   const SearchFilter = event => {
     const searchtext = event.nativeEvent.text;
     const Teks = searchtext.trim().toLowerCase();
-    const {surahs} = dataFilter;
 
-    const newData = surahs.filter(item =>
+    const newData = dataFilter.filter(item =>
       item.englishName.toLowerCase().match(Teks),
     );
-    setData({surahs: newData});
+    console.log(newData);
+    setData(newData);
   };
 
   const getData = useCallback(async timeOut => {
@@ -51,7 +52,7 @@ const Home = ({navigation}) => {
         timeout: 1 * 60000,
       });
       const result = await response.data.data;
-      setData(result);
+      setData(result.surahs);
       setDataFilter(result);
       setLoading(false);
     } catch (erro) {
@@ -89,36 +90,33 @@ const Home = ({navigation}) => {
       if ((await AsyncStorage.getItem('Quran')) === null) {
         getData();
       }
+      setLoading(true);
       const LLL = await AsyncStorage.getItem('Quran');
       const qurans = JSON.parse(LLL);
-      setData(qurans);
-      setDataFilter(qurans);
+      setData(qurans.surahs);
+      setDataFilter(qurans.surahs);
+      setLoading(false);
     } catch (err) {
       console.log(err);
     }
   }, [getData]);
 
-  const renderCard = useCallback(
-    ({item}) => (
-      <CardSurat
-        key={item.number}
-        name={item.name}
-        title={item.englishName}
-        onPress={() => navigation.navigate('Surahs', {id: item.number})}
-      />
-    ),
-    [navigation],
-  );
+  const yScroll = new Animated.Value(0);
 
-  const MemoRender = useMemo(() => renderCard, [renderCard]);
+  const HeaderHeight = yScroll.interpolate({
+    inputRange: [0, 400],
+    outputRange: [250, 120],
+    extrapolate: 'clamp',
+  });
 
   return (
     <View style={{flex: 1}}>
       <StatusBar showHideTransition="slide" barStyle="dark-content" />
-      <ImageBackground
-        source={Masjid}
-        resizeMode="cover"
-        style={styles.homeCard}>
+      <View>
+        <Animated.Image
+          source={Masjid}
+          style={[styles.homeCard, {height: HeaderHeight}]}
+        />
         <View style={styles.containerCard}>
           <DigitalClock />
           <Item style={styles.searchInput}>
@@ -130,17 +128,30 @@ const Home = ({navigation}) => {
             />
           </Item>
         </View>
-      </ImageBackground>
+      </View>
       {loading ? (
         <ActivityIndicator color="blue" size={40} />
       ) : (
-        <FlatList
-          data={data.surahs}
-          renderItem={MemoRender}
-          maxToRenderPerBatch={15}
-          keyExtractor={(item, index) => index.toString()}
+        <ScrollView
           showsVerticalScrollIndicator={false}
-        />
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: yScroll}}}],
+            {useNativeDriver: false},
+          )}>
+          {data &&
+            data.map(item => {
+              return (
+                <CardSurat
+                  name={item.name}
+                  key={item.number}
+                  title={item.englishName}
+                  onPress={() =>
+                    navigation.navigate('Surahs', {id: item.number})
+                  }
+                />
+              );
+            })}
+        </ScrollView>
       )}
     </View>
   );
@@ -178,10 +189,26 @@ const styles = StyleSheet.create({
   containerCard: {
     padding: 10,
     position: 'absolute',
-    bottom: 0,
+    bottom: 15,
     width,
   },
   times: {marginBottom: 20, fontSize: 25, fontWeight: 'bold'},
 });
 
 export default Home;
+
+{
+  /* <FlatList
+          data={data}
+          removeClippedSubviews={true}
+          updateCellsBatchingPeriod={50}
+          renderItem={MemoItem}
+          maxToRenderPerBatch={15}
+          keyExtractor={item => `${item.number}`}
+          showsVerticalScrollIndicator={false}
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: yScroll}}}],
+            {useNativeDriver: false},
+          )}
+        /> */
+}

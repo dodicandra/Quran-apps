@@ -52,8 +52,8 @@ export const CardDetailSurah = React.memo(({title, name, ayat}) => {
         </CardItem>
         {ayat &&
           ayat.map(ayah => (
-            <CardItem bordered>
-              <Body style={styles.Body} key={ayah.nymber}>
+            <CardItem key={ayah.number} bordered>
+              <Body style={styles.Body} key={ayah.number}>
                 <Text style={styles.nomerAyat}>ayat {ayah.numberInSurah}</Text>
                 <View style={styles.tekAyat}>
                   <View style={styles.containerAyat}>
