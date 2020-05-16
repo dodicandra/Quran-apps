@@ -7,7 +7,6 @@ const compare = (prev, next) => {
 };
 
 const DigitalClock = React.memo(() => {
-  console.log('JAM');
   const [date, setDate] = useState(new Date());
 
   const getDATE = (val = false) => {

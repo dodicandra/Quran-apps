@@ -1,17 +1,15 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
-import {Icon, Input, Item, Fab, Button, Container} from 'native-base';
-import React, {useEffect, useState, useMemo, useCallback} from 'react';
+import {Icon, Input, Item} from 'native-base';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Dimensions,
   StyleSheet,
   View,
-  Alert,
 } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import {Text} from 'native-base';
 import {FlatList} from 'react-native-gesture-handler';
-import moment from 'moment';
 import {CardSurat} from '../Components';
 import DigitalClock from '../Components/DigitalJam';
 
@@ -22,11 +20,14 @@ const Home = ({navigation}) => {
   const [dataFilter, setDataFilter] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  console.log('kok');
-
   useEffect(() => {
     getLocal();
-  }, []);
+  }, [getLocal]);
+
+  useEffect(() => {
+    setOffLine();
+    return () => setOffLine;
+  });
 
   const SearchFilter = event => {
     const searchtext = event.nativeEvent.text;
@@ -39,7 +40,7 @@ const Home = ({navigation}) => {
     setData({surahs: newData});
   };
 
-  const getData = async timeOut => {
+  const getData = useCallback(async timeOut => {
     try {
       setLoading(true);
       if (timeOut === true) return;
@@ -61,19 +62,24 @@ const Home = ({navigation}) => {
         {cancelable: false},
       );
     }
-  };
-  const setOffLine = async () => {
+  }, []);
+
+  const setOffLine = useCallback(async () => {
     try {
-      const quran = await dataFilter.surahs.map(val => ({
-        name: val.name,
-        englishName: val.englishName,
-        number: val.number,
-      }));
-      await AsyncStorage.setItem('Quran', JSON.stringify({surahs: quran}));
+      if ((await AsyncStorage.getItem('Quran')) === null) {
+        const quran = await dataFilter.surahs.map(val => ({
+          name: val.name,
+          englishName: val.englishName,
+          number: val.number,
+        }));
+        await AsyncStorage.setItem('Quran', JSON.stringify({surahs: quran}));
+        alert('SUKSES');
+      }
+      return;
     } catch (err) {
       console.log(err);
     }
-  };
+  }, [dataFilter]);
 
   const getLocal = useCallback(async () => {
     try {
@@ -87,7 +93,7 @@ const Home = ({navigation}) => {
     } catch (err) {
       console.log(err);
     }
-  }, []);
+  }, [getData]);
 
   // hanya untuk testing
   const removeLocal = async () => {
@@ -98,16 +104,19 @@ const Home = ({navigation}) => {
     }
   };
 
-  const renderCard = ({item}) => (
-    <CardSurat
-      key={item.number}
-      name={item.name}
-      title={item.englishName}
-      onPress={() => navigation.navigate('Surahs')}
-    />
+  const renderCard = useCallback(
+    ({item}) => (
+      <CardSurat
+        key={item.number}
+        name={item.name}
+        title={item.englishName}
+        onPress={() => navigation.navigate('Surahs', {id: item.number})}
+      />
+    ),
+    [navigation],
   );
 
-  const MemoRender = useMemo(() => renderCard, []);
+  const MemoRender = useMemo(() => renderCard, [renderCard]);
 
   return (
     <View style={{flex: 1}}>
@@ -135,14 +144,6 @@ const Home = ({navigation}) => {
           showsVerticalScrollIndicator={false}
         />
       )}
-      <Fab
-        direction="up"
-        containerStyle={{}}
-        style={{backgroundColor: '#5067FF'}}
-        position="bottomRight"
-        onPress={() => setOffLine()}>
-        <Text style={{fontSize: 10}}>Offline</Text>
-      </Fab>
     </View>
   );
 };
