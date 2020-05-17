@@ -1,8 +1,7 @@
 import {Body, Card, CardItem, Content, Text, View} from 'native-base';
-import React, {useContext} from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import TrackPlayer from 'react-native-track-player';
-import {Context} from '../../hooks/Provider';
 import IconsPlay from '../IconPlay';
 
 const compare = (prev, next) => {
@@ -36,11 +35,10 @@ export const CardSurat = React.memo(({title, name, onPress}) => {
 }, compare);
 
 export const CardDetailSurah = React.memo(({title, name, ayat}) => {
-  const {setModalPlay} = useContext(Context);
+  const [playIcon, setPlay] = useState(true);
 
   const playing = async ayah => {
     play(ayah.numberInSurah, ayah.audio);
-    setModalPlay(true);
   };
 
   return (
@@ -59,7 +57,10 @@ export const CardDetailSurah = React.memo(({title, name, ayat}) => {
                   <View style={styles.containerAyat}>
                     <Text style={styles.listAyat}>{ayah.text}</Text>
                   </View>
-                  <IconsPlay onPressPlay={() => playing(ayah)} />
+                  <IconsPlay
+                    play={playIcon}
+                    onPressPlay={() => playing(ayah)}
+                  />
                 </View>
               </Body>
             </CardItem>

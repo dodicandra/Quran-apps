@@ -23,7 +23,14 @@ const Provider = ({children}) => {
 
   return (
     <Context.Provider
-      value={{modalPlay, paused, setModalPlay, stopPlay, pausePlay, played}}>
+      value={{
+        modalPlay,
+        paused,
+        setModalPlay,
+        stopPlay,
+        pausePlay,
+        played,
+      }}>
       {children}
     </Context.Provider>
   );

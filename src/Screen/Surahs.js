@@ -48,43 +48,6 @@ const Surahs = ({route}) => {
         name={data.name}
         ayat={data.ayahs}
       />
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalPlay}
-        onRequestClose={modalPress}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            {paused ? (
-              <TouchableHighlight
-                style={{...styles.openButton, backgroundColor: '#2196F3'}}
-                onPress={played}>
-                <Icon
-                  type="Entypo"
-                  name="controller-play"
-                  style={styles.textStyle}
-                />
-              </TouchableHighlight>
-            ) : (
-              <TouchableHighlight
-                style={{...styles.openButton, backgroundColor: '#2196F3'}}
-                onPress={pausePlay}>
-                <Icon type="Feather" name="pause" style={styles.textStyle} />
-              </TouchableHighlight>
-            )}
-
-            <TouchableHighlight
-              style={{...styles.openButton, backgroundColor: 'red'}}
-              onPress={modalPress}>
-              <Icon
-                type="Entypo"
-                name="controller-stop"
-                style={styles.textStyle}
-              />
-            </TouchableHighlight>
-          </View>
-        </View>
-      </Modal>
     </>
   );
 };

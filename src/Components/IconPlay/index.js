@@ -1,15 +1,50 @@
 import {Icon} from 'native-base';
-import React from 'react';
-import {StyleSheet} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import {Context} from '../../hooks/Provider';
 
-const IconsPlay = ({onPressPlay}) => {
+const IconsPlay = ({play, onPressPlay}) => {
+  const {stopPlay} = useContext(Context);
+  const [playing, setPlay] = useState(play);
+  const [iconName, setIconName] = useState('control-play');
+
+  console.log(playing);
+  const togglePlay = () => {
+    onPressPlay();
+    setStateIcon();
+    setPlay(!playing);
+  };
+
+  const togglePause = () => {
+    stopPlay();
+    setStateIcon();
+    setPlay(!playing);
+  };
+
+  const setStateIcon = () => {
+    setIconName(state =>
+      state === 'control-play' ? 'control-pause' : 'control-play',
+    );
+  };
+
   return (
-    <Icon
-      type="SimpleLineIcons"
-      name="control-play"
-      style={styles.Icons}
-      onPress={onPressPlay}
-    />
+    <TouchableOpacity>
+      {playing ? (
+        <Icon
+          type="SimpleLineIcons"
+          name={iconName}
+          style={styles.Icons}
+          onPress={togglePlay}
+        />
+      ) : (
+        <Icon
+          type="SimpleLineIcons"
+          name={iconName}
+          style={styles.Icons}
+          onPress={togglePause}
+        />
+      )}
+    </TouchableOpacity>
   );
 };
 
