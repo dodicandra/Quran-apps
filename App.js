@@ -5,9 +5,15 @@ import axios from 'axios';
 
 axios.defaults.baseURL = 'https://api.alquran.cloud/v1/';
 
+const theme = {
+  colors: {
+    background: 'white',
+  },
+};
+
 const App = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={theme}>
       <Root />
     </NavigationContainer>
   );

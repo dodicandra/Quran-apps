@@ -1,22 +1,35 @@
 import {Icon} from 'native-base';
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
-import {Context} from '../../hooks/Provider';
+import TrackPlayer from 'react-native-track-player';
 
-const IconsPlay = ({play, onPressPlay}) => {
-  const {stopPlay} = useContext(Context);
-  const [playing, setPlay] = useState(play);
+const IconsPlay = ({audio, id}) => {
+  const [playing, setPlay] = useState(true);
   const [iconName, setIconName] = useState('control-play');
 
+  const play = async (number, url) => {
+    try {
+      await TrackPlayer.setupPlayer();
+      await TrackPlayer.add({
+        id: number,
+        url,
+      });
+      await TrackPlayer.play();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   console.log(playing);
+
   const togglePlay = () => {
-    onPressPlay();
+    play(id, audio);
     setStateIcon();
     setPlay(!playing);
   };
 
   const togglePause = () => {
-    stopPlay();
+    TrackPlayer.pause();
     setStateIcon();
     setPlay(!playing);
   };

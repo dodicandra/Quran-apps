@@ -1,23 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from 'axios';
-import {Text, Icon} from 'native-base';
-import React, {useContext, useEffect, useState} from 'react';
-import {Alert, Modal, StyleSheet, TouchableHighlight, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet} from 'react-native';
 import {CardDetailSurah} from '../Components';
-import {Context} from '../hooks/Provider';
 
 const Surahs = ({route}) => {
   const {id} = route.params;
-
-  const {
-    stopPlay,
-    modalPlay,
-    setModalPlay,
-    pausePlay,
-    paused,
-    played,
-  } = useContext(Context);
 
   const [data, setData] = useState([]);
 
@@ -34,11 +23,6 @@ const Surahs = ({route}) => {
     } catch (err) {
       console.log(err);
     }
-  };
-
-  const modalPress = () => {
-    setModalPlay(!modalPlay);
-    stopPlay();
   };
 
   return (

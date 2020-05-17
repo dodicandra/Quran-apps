@@ -1,19 +1,20 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import {Icon, Input, Item} from 'native-base';
-import React, {useCallback, useEffect, useState, useMemo} from 'react';
+import React, {useCallback, useEffect, useState, useRef} from 'react';
 import {
   ActivityIndicator,
   Alert,
   Animated,
   Dimensions,
+  ScrollView,
   StatusBar,
   StyleSheet,
   View,
-  ScrollView,
+  Keyboard,
+  KeyboardAvoidingView,
 } from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
-import Masjid from '../assets/image/masjid.png';
+import Masjid from '../assets/image/masjiddd.png';
 import {CardSurat} from '../Components';
 import DigitalClock from '../Components/DigitalJam';
 
@@ -32,6 +33,31 @@ const Home = ({navigation}) => {
     setOffLine();
     return () => setOffLine;
   });
+
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidShow', keyboardDidShow);
+    Keyboard.addListener('keyboardDidHide', keyboardDidHide);
+
+    return () => {
+      Keyboard.removeAllListeners('keyboardDidShow');
+      Keyboard.removeAllListeners('keyboardDidHide');
+    };
+  }, []);
+
+  const headerTiming = new Animated.Value(300);
+
+  const keyboardDidShow = () => {
+    console.log('SHOW');
+    Animated.timing(headerTiming, {
+      toValue: 120,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const keyboardDidHide = () => {
+    console.log('HIDE');
+  };
 
   const SearchFilter = event => {
     const searchtext = event.nativeEvent.text;
@@ -105,34 +131,37 @@ const Home = ({navigation}) => {
 
   const HeaderHeight = yScroll.interpolate({
     inputRange: [0, 400],
-    outputRange: [250, 120],
+    outputRange: [320, 120],
     extrapolate: 'clamp',
   });
 
   return (
     <View style={{flex: 1}}>
       <StatusBar showHideTransition="slide" barStyle="dark-content" />
-      <View>
-        <Animated.Image
-          source={Masjid}
-          style={[styles.homeCard, {height: HeaderHeight}]}
-        />
-        <View style={styles.containerCard}>
-          <DigitalClock />
-          <Item style={styles.searchInput}>
-            <Icon name="ios-search" />
-            <Input
-              disabled={loading}
-              placeholder="Search"
-              onChange={e => SearchFilter(e)}
-            />
-          </Item>
+      <KeyboardAvoidingView behavior="height">
+        <View>
+          <Animated.Image
+            source={Masjid}
+            style={[styles.homeCard, {height: HeaderHeight}]}
+          />
+          <View style={styles.containerCard}>
+            <DigitalClock />
+            <Item style={styles.searchInput}>
+              <Icon name="ios-search" />
+              <Input
+                disabled={loading}
+                placeholder="Search"
+                onChange={e => SearchFilter(e)}
+              />
+            </Item>
+          </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
       {loading ? (
         <ActivityIndicator color="blue" size={40} />
       ) : (
         <ScrollView
+          style={{paddingHorizontal: 17}}
           showsVerticalScrollIndicator={false}
           onScroll={Animated.event(
             [{nativeEvent: {contentOffset: {y: yScroll}}}],
@@ -141,14 +170,16 @@ const Home = ({navigation}) => {
           {data &&
             data.map(item => {
               return (
-                <CardSurat
-                  name={item.name}
-                  key={item.number}
-                  title={item.englishName}
-                  onPress={() =>
-                    navigation.navigate('Surahs', {id: item.number})
-                  }
-                />
+                <View style={{marginVertical: 7}}>
+                  <CardSurat
+                    name={item.name}
+                    key={item.number}
+                    title={item.englishName}
+                    onPress={() =>
+                      navigation.navigate('Surahs', {id: item.number})
+                    }
+                  />
+                </View>
               );
             })}
         </ScrollView>
@@ -174,7 +205,6 @@ const styles = StyleSheet.create({
   },
   homeCard: {
     width: width,
-    height: 250,
     backgroundColor: '#aeaeae',
     marginBottom: 10,
     borderBottomLeftRadius: 5,
