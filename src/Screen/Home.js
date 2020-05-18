@@ -45,11 +45,11 @@ const Home = ({navigation}) => {
   });
 
   const keyboardDidShow = () => {
-    setKeyboardShow(!isKeyboardShow);
+    setKeyboardShow(true);
     _scaleDwn();
   };
   const keyboardDidHide = () => {
-    setKeyboardShow(!isKeyboardShow);
+    setKeyboardShow(false);
   };
 
   const timing = useRef(new Animated.Value(120)).current;
