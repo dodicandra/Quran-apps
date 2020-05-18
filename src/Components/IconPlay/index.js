@@ -1,11 +1,12 @@
 import {Icon} from 'native-base';
-import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Animated, StyleSheet} from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 
 const IconsPlay = ({audio, id}) => {
   const [playing, setPlay] = useState(true);
   const [iconName, setIconName] = useState('control-play');
+  const anScale = new Animated.Value(0);
 
   const play = async (number, url) => {
     try {
@@ -20,7 +21,9 @@ const IconsPlay = ({audio, id}) => {
     }
   };
 
-  console.log(playing);
+  useEffect(() => {
+    _spring();
+  }, [playing]);
 
   const togglePlay = () => {
     play(id, audio);
@@ -40,24 +43,36 @@ const IconsPlay = ({audio, id}) => {
     );
   };
 
+  const _spring = () => {
+    Animated.spring(anScale, {
+      toValue: 1,
+      friction: 4,
+      useNativeDriver: false,
+    }).start();
+  };
+
   return (
-    <TouchableOpacity>
+    <>
       {playing ? (
-        <Icon
-          type="SimpleLineIcons"
-          name={iconName}
-          style={styles.Icons}
-          onPress={togglePlay}
-        />
+        <Animated.View style={{transform: [{scale: anScale}]}}>
+          <Icon
+            type="SimpleLineIcons"
+            name={iconName}
+            style={styles.Icons}
+            onPress={togglePlay}
+          />
+        </Animated.View>
       ) : (
-        <Icon
-          type="SimpleLineIcons"
-          name={iconName}
-          style={styles.Icons}
-          onPress={togglePause}
-        />
+        <Animated.View style={{transform: [{scale: anScale}]}}>
+          <Icon
+            type="SimpleLineIcons"
+            name={iconName}
+            style={styles.Icons}
+            onPress={togglePause}
+          />
+        </Animated.View>
       )}
-    </TouchableOpacity>
+    </>
   );
 };
 

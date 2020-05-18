@@ -23,7 +23,7 @@ const DigitalClock = React.memo(() => {
   useEffect(() => {
     call();
     return () => call(true);
-  }, [call]);
+  }, []);
 
   return (
     <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>

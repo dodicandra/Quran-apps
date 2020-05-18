@@ -7,12 +7,11 @@ import {
   Alert,
   Animated,
   Dimensions,
+  Keyboard,
   ScrollView,
   StatusBar,
   StyleSheet,
   View,
-  Keyboard,
-  KeyboardAvoidingView,
 } from 'react-native';
 import Masjid from '../assets/image/masjiddd.png';
 import {CardSurat} from '../Components';
@@ -24,6 +23,7 @@ const Home = ({navigation}) => {
   const [data, setData] = useState([]);
   const [dataFilter, setDataFilter] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isKeyboardShow, setKeyboardShow] = useState(false);
 
   useEffect(() => {
     getLocal();
@@ -32,7 +32,35 @@ const Home = ({navigation}) => {
   useEffect(() => {
     setOffLine();
     return () => setOffLine;
+  }, []);
+
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidShow', keyboardDidShow);
+    Keyboard.addListener('keyboardDidHide', keyboardDidHide);
+
+    return () => {
+      Keyboard.removeAllListeners('keyboardDidShow');
+      Keyboard.removeAllListeners('keyboardDidHide');
+    };
   });
+
+  const keyboardDidShow = () => {
+    setKeyboardShow(!isKeyboardShow);
+    _scaleDwn();
+  };
+  const keyboardDidHide = () => {
+    setKeyboardShow(!isKeyboardShow);
+  };
+
+  const timing = useRef(new Animated.Value(120)).current;
+
+  const _scaleDwn = () => {
+    Animated.timing(timing, {
+      toValue: 120,
+      duration: 2000,
+      useNativeDriver: false,
+    }).start();
+  };
 
   const SearchFilter = event => {
     const searchtext = event.nativeEvent.text;
@@ -99,7 +127,7 @@ const Home = ({navigation}) => {
     }
   }, [getData]);
 
-  const yScroll = new Animated.Value(0);
+  const yScroll = useRef(new Animated.Value(0)).current;
 
   const HeaderHeight = yScroll.interpolate({
     inputRange: [0, 400],
@@ -110,25 +138,26 @@ const Home = ({navigation}) => {
   return (
     <View style={{flex: 1}}>
       <StatusBar showHideTransition="slide" barStyle="dark-content" />
-      <KeyboardAvoidingView behavior="height">
-        <View>
-          <Animated.Image
-            source={Masjid}
-            style={[styles.homeCard, {height: HeaderHeight}]}
-          />
-          <View style={styles.containerCard}>
-            <DigitalClock />
-            <Item style={styles.searchInput}>
-              <Icon name="ios-search" />
-              <Input
-                disabled={loading}
-                placeholder="Search"
-                onChange={e => SearchFilter(e)}
-              />
-            </Item>
-          </View>
+      <View>
+        <Animated.Image
+          source={Masjid}
+          style={[
+            styles.homeCard,
+            {height: isKeyboardShow ? timing : HeaderHeight},
+          ]}
+        />
+        <View style={styles.containerCard}>
+          <DigitalClock />
+          <Item style={styles.searchInput}>
+            <Icon name="ios-search" />
+            <Input
+              disabled={loading}
+              placeholder="Search"
+              onChange={e => SearchFilter(e)}
+            />
+          </Item>
         </View>
-      </KeyboardAvoidingView>
+      </View>
       {loading ? (
         <ActivityIndicator color="blue" size={40} />
       ) : (
