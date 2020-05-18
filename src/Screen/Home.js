@@ -34,31 +34,6 @@ const Home = ({navigation}) => {
     return () => setOffLine;
   });
 
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', keyboardDidShow);
-    Keyboard.addListener('keyboardDidHide', keyboardDidHide);
-
-    return () => {
-      Keyboard.removeAllListeners('keyboardDidShow');
-      Keyboard.removeAllListeners('keyboardDidHide');
-    };
-  }, []);
-
-  const headerTiming = new Animated.Value(300);
-
-  const keyboardDidShow = () => {
-    console.log('SHOW');
-    Animated.timing(headerTiming, {
-      toValue: 120,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const keyboardDidHide = () => {
-    console.log('HIDE');
-  };
-
   const SearchFilter = event => {
     const searchtext = event.nativeEvent.text;
     const Teks = searchtext.trim().toLowerCase();
@@ -66,14 +41,12 @@ const Home = ({navigation}) => {
     const newData = dataFilter.filter(item =>
       item.englishName.toLowerCase().match(Teks),
     );
-    console.log(newData);
     setData(newData);
   };
 
-  const getData = useCallback(async timeOut => {
+  const getData = useCallback(async () => {
     try {
       setLoading(true);
-      if (timeOut === true) return;
       const response = await axios.get('quran/ar.alafasy', {
         timeout: 1 * 60000,
       });
@@ -84,7 +57,6 @@ const Home = ({navigation}) => {
     } catch (erro) {
       console.log(erro);
       setLoading(false);
-      getData(true);
       Alert.alert(
         'Terjadi kesalahan',
         'mungkin jaringan mu bermasalah',
@@ -226,19 +198,3 @@ const styles = StyleSheet.create({
 });
 
 export default Home;
-
-{
-  /* <FlatList
-          data={data}
-          removeClippedSubviews={true}
-          updateCellsBatchingPeriod={50}
-          renderItem={MemoItem}
-          maxToRenderPerBatch={15}
-          keyExtractor={item => `${item.number}`}
-          showsVerticalScrollIndicator={false}
-          onScroll={Animated.event(
-            [{nativeEvent: {contentOffset: {y: yScroll}}}],
-            {useNativeDriver: false},
-          )}
-        /> */
-}
