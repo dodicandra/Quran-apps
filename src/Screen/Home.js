@@ -12,6 +12,7 @@ import {
   StatusBar,
   StyleSheet,
   View,
+  Platform,
 } from 'react-native';
 import Masjid from '../assets/image/masjiddd.png';
 import {CardSurat} from '../Components';
@@ -25,24 +26,59 @@ const Home = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [isKeyboardShow, setKeyboardShow] = useState(false);
 
-  console.log('FILL =>>', dataFilter);
+  const yScroll = useRef(new Animated.Value(0)).current;
+  const timing = useRef(new Animated.Value(120)).current;
 
   useEffect(() => {
+    const getLocal = async () => {
+      try {
+        if ((await AsyncStorage.getItem('Quran')) === null) {
+          getData();
+        }
+        setLoading(true);
+        const LLL = await AsyncStorage.getItem('Quran');
+        const qurans = JSON.parse(LLL);
+        setData(qurans.surahs);
+        setDataFilter(qurans);
+        setLoading(false);
+      } catch (err) {
+        console.log(err);
+      }
+    };
     getLocal();
-  }, [getLocal]);
+
+    return () => getLocal;
+  }, [getData]);
 
   useEffect(() => {
+    const setOffLine = async () => {
+      try {
+        if ((await AsyncStorage.getItem('Quran')) === null) {
+          const quran = await dataFilter.surahs.map(val => ({
+            name: val.name,
+            englishName: val.englishName,
+            number: val.number,
+          }));
+          await AsyncStorage.setItem('Quran', JSON.stringify({surahs: quran}));
+          alert('SUKSES');
+        }
+        return;
+      } catch (err) {
+        console.log(err);
+      }
+    };
     setOffLine();
     return () => setOffLine;
   });
 
   useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', keyboardDidShow);
-    Keyboard.addListener('keyboardDidHide', keyboardDidHide);
+    const keyboardAction = Platform.OS === 'ios' ? 'Will' : 'Did';
+    Keyboard.addListener(`keyboard${keyboardAction}Show`, keyboardDidShow);
+    Keyboard.addListener(`keyboard${keyboardAction}Hide`, keyboardDidHide);
 
     return () => {
-      Keyboard.removeAllListeners('keyboardDidShow');
-      Keyboard.removeAllListeners('keyboardDidHide');
+      Keyboard.removeAllListeners(`keyboard${keyboardAction}Show`);
+      Keyboard.removeAllListeners(`keyboard${keyboardAction}Hide`);
     };
   });
 
@@ -54,8 +90,6 @@ const Home = ({navigation}) => {
     setKeyboardShow(false);
   };
 
-  const timing = useRef(new Animated.Value(120)).current;
-
   const _scaleDwn = () => {
     Animated.timing(timing, {
       toValue: 120,
@@ -63,6 +97,12 @@ const Home = ({navigation}) => {
       useNativeDriver: false,
     }).start();
   };
+
+  const HeaderHeight = yScroll.interpolate({
+    inputRange: [0, 400],
+    outputRange: [320, 120],
+    extrapolate: 'clamp',
+  });
 
   const SearchFilter = event => {
     const searchtext = event.nativeEvent.text;
@@ -95,47 +135,6 @@ const Home = ({navigation}) => {
       );
     }
   }, []);
-
-  const setOffLine = useCallback(async () => {
-    try {
-      if ((await AsyncStorage.getItem('Quran')) === null) {
-        const quran = await dataFilter.surahs.map(val => ({
-          name: val.name,
-          englishName: val.englishName,
-          number: val.number,
-        }));
-        await AsyncStorage.setItem('Quran', JSON.stringify({surahs: quran}));
-        alert('SUKSES');
-      }
-      return;
-    } catch (err) {
-      console.log(err);
-    }
-  }, [dataFilter]);
-
-  const getLocal = useCallback(async () => {
-    try {
-      if ((await AsyncStorage.getItem('Quran')) === null) {
-        getData();
-      }
-      setLoading(true);
-      const LLL = await AsyncStorage.getItem('Quran');
-      const qurans = JSON.parse(LLL);
-      setData(qurans.surahs);
-      setDataFilter(qurans);
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-    }
-  }, [getData]);
-
-  const yScroll = useRef(new Animated.Value(0)).current;
-
-  const HeaderHeight = yScroll.interpolate({
-    inputRange: [0, 400],
-    outputRange: [320, 120],
-    extrapolate: 'clamp',
-  });
 
   return (
     <View style={{flex: 1}}>
