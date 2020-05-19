@@ -25,6 +25,8 @@ const Home = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [isKeyboardShow, setKeyboardShow] = useState(false);
 
+  console.log('FILL =>>', dataFilter);
+
   useEffect(() => {
     getLocal();
   }, [getLocal]);
@@ -32,7 +34,7 @@ const Home = ({navigation}) => {
   useEffect(() => {
     setOffLine();
     return () => setOffLine;
-  }, []);
+  });
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', keyboardDidShow);
@@ -66,7 +68,7 @@ const Home = ({navigation}) => {
     const searchtext = event.nativeEvent.text;
     const Teks = searchtext.trim().toLowerCase();
 
-    const newData = dataFilter.filter(item =>
+    const newData = dataFilter.surahs.filter(item =>
       item.englishName.toLowerCase().match(Teks),
     );
     setData(newData);
@@ -120,7 +122,7 @@ const Home = ({navigation}) => {
       const LLL = await AsyncStorage.getItem('Quran');
       const qurans = JSON.parse(LLL);
       setData(qurans.surahs);
-      setDataFilter(qurans.surahs);
+      setDataFilter(qurans);
       setLoading(false);
     } catch (err) {
       console.log(err);
