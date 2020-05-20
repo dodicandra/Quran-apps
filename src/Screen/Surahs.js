@@ -2,13 +2,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ActivityIndicator} from 'react-native';
 import {CardDetailSurah} from '../Components';
 
 const Surahs = ({route}) => {
   const {id} = route.params;
 
   const [data, setData] = useState([]);
+  const [loding, setLoading] = useState(false);
 
   useEffect(() => {
     getData();
@@ -17,21 +18,28 @@ const Surahs = ({route}) => {
 
   const getData = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(`surah/${id}/ar.alafasy`);
       const result = await response.data.data;
       setData(result);
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       console.log(err);
     }
   };
 
   return (
     <>
-      <CardDetailSurah
-        title={data.englishName}
-        name={data.name}
-        ayat={data.ayahs}
-      />
+      {loding ? (
+        <ActivityIndicator size="large" color="blue" />
+      ) : (
+        <CardDetailSurah
+          title={data.englishName}
+          name={data.name}
+          ayat={data.ayahs}
+        />
+      )}
     </>
   );
 };

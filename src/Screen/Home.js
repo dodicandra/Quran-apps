@@ -17,33 +17,21 @@ import {
 import Masjid from '../assets/image/masjiddd.png';
 import {CardSurat} from '../Components';
 import DigitalClock from '../Components/DigitalJam';
+import {useNavigation} from '@react-navigation/native';
 import {AdMobInterstitial} from 'react-native-admob';
+import {requesAdds} from '../utils/adds';
 
 const {width} = Dimensions.get('window');
 
-const Home = ({navigation}) => {
+const Home = () => {
   const [data, setData] = useState([]);
   const [dataFilter, setDataFilter] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isKeyboardShow, setKeyboardShow] = useState(false);
+  const navigation = useNavigation();
 
   const yScroll = useRef(new Animated.Value(0)).current;
   const timing = useRef(new Animated.Value(120)).current;
-
-  useEffect(() => {
-    (async () => {
-      try {
-        await AdMobInterstitial.setAdUnitID(
-          'ca-app-pub-8960982869518476/1333795958',
-        );
-        await AdMobInterstitial.setTestDevices([AdMobInterstitial.simulatorId]);
-        await AdMobInterstitial.requestAd();
-        await AdMobInterstitial.showAd();
-      } catch (err) {
-        console.log(err);
-      }
-    })();
-  }, []);
 
   useEffect(() => {
     const getLocal = async () => {
