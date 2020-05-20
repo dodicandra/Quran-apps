@@ -1,25 +1,23 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import {Icon, Input, Item} from 'native-base';
-import React, {useCallback, useEffect, useState, useRef} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
   Animated,
   Dimensions,
   Keyboard,
+  Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
   View,
-  Platform,
 } from 'react-native';
-import Masjid from '../assets/image/masjiddd.png';
+import Masjid from '../assets/image/Mosque.jpg';
 import {CardSurat} from '../Components';
 import DigitalClock from '../Components/DigitalJam';
-import {useNavigation} from '@react-navigation/native';
-import {AdMobInterstitial} from 'react-native-admob';
-import {requesAdds} from '../utils/adds';
 
 const {width} = Dimensions.get('window');
 
@@ -142,8 +140,12 @@ const Home = () => {
 
   return (
     <View style={{flex: 1}}>
-      <StatusBar showHideTransition="slide" barStyle="dark-content" />
-      <View>
+      <StatusBar
+        showHideTransition="fade"
+        translucent={true}
+        barStyle="dark-content"
+      />
+      <View style={{width}}>
         <Animated.Image
           source={Masjid}
           style={[
@@ -157,7 +159,7 @@ const Home = () => {
             <Icon name="ios-search" />
             <Input
               disabled={loading}
-              placeholder="Search"
+              placeholder="Search..."
               onChange={e => SearchFilter(e)}
             />
           </Item>

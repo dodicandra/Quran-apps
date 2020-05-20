@@ -36,7 +36,16 @@ const DigitalClock = React.memo(() => {
 }, compare);
 
 const styles = StyleSheet.create({
-  times: {marginBottom: 15, fontSize: 25, fontWeight: 'bold'},
+  times: {
+    marginBottom: 0,
+    marginLeft: 3,
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: 'white',
+    textShadowColor: 'black',
+    textShadowRadius: 4,
+    textShadowOffset: {width: 3, height: 3},
+  },
 });
 
 export default DigitalClock;
