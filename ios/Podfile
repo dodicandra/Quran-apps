@@ -78,6 +78,7 @@ target 'Quran' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
 
+
   target 'QuranTests' do
     inherit! :complete
     # Pods for testing

@@ -1,7 +1,7 @@
 import AdMobInterstitial from 'react-native-admob/RNAdMobInterstitial';
 import adds from '../../config.adds.json';
 
-const uniID = adds.addsIDdodi;
+const uniID = adds.addsID2;
 const testID = 'ca-app-pub-3940256099942544/1033173712';
 
 export const requesAdds = async () => {

@@ -4,6 +4,7 @@ import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, ActivityIndicator} from 'react-native';
 import {CardDetailSurah} from '../Components';
+import {View} from 'native-base';
 
 const Surahs = ({route}) => {
   const {id} = route.params;
@@ -32,7 +33,9 @@ const Surahs = ({route}) => {
   return (
     <>
       {loding ? (
-        <ActivityIndicator size="large" color="blue" />
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size="large" color="blue" />
+        </View>
       ) : (
         <CardDetailSurah
           title={data.englishName}
