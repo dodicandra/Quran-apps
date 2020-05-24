@@ -1,20 +1,52 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
+import {AdEventType} from '@react-native-firebase/admob';
 import axios from 'axios';
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, ActivityIndicator} from 'react-native';
-import {CardDetailSurah} from '../Components';
 import {View} from 'native-base';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, BackHandler, StyleSheet} from 'react-native';
+import {CardDetailSurah} from '../Components';
+import {fireAddsIn} from '../utils/adds';
 
-const Surahs = ({route}) => {
+const Surahs = ({route, navigation}) => {
   const {id} = route.params;
 
   const [data, setData] = useState([]);
   const [loding, setLoading] = useState(false);
 
   useEffect(() => {
+    const addListener = () => {
+      try {
+        fireAddsIn.onAdEvent(async (type, error, dataAds) => {
+          if (type === AdEventType.LOADED) {
+            console.log('loaded ==>', type);
+          }
+          if (type === AdEventType.ERROR) {
+            console.log(error);
+          }
+        });
+        fireAddsIn.load();
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    addListener();
+    return () => {
+      addListener();
+    };
+  }, []);
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      fireAddsIn.show().catch(err => console.log(err));
+      // navigation.goBack();
+    });
     getData();
-    return () => getData;
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress');
+      getData;
+    };
   }, []);
 
   const getData = async () => {
