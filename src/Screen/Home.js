@@ -215,8 +215,8 @@ const styles = StyleSheet.create({
     width: width,
     backgroundColor: '#aeaeae',
     marginBottom: 10,
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
   },
   searchInput: {
     backgroundColor: 'white',

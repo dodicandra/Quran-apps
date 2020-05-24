@@ -23,7 +23,7 @@ const IconsPlay = ({audio, id}) => {
 
   useEffect(() => {
     _spring();
-  }, [playing]);
+  }, [_spring, playing]);
 
   const togglePlay = () => {
     play(id, audio);
