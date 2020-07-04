@@ -2,16 +2,18 @@ import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
 import Root from './src/router/root';
 import axios from 'axios';
+import {YellowBox} from 'react-native';
 
 axios.defaults.baseURL = 'https://api.alquran.cloud/v1/';
 
 const theme = {
   colors: {
-    background: 'white',
-  },
+    background: 'white'
+  }
 };
 
 const App = () => {
+  YellowBox.ignoreWarnings(['No task registered for key']);
   return (
     <NavigationContainer theme={theme}>
       <Root />

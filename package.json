@@ -8,7 +8,7 @@
     "start": "npx react-native start",
     "test": "jest",
     "release": "npx react-native run-android --variant=release",
-    "lint": "eslint ."
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.10.1",
@@ -36,15 +36,33 @@
     "@babel/core": "^7.6.2",
     "@babel/runtime": "^7.6.2",
     "@react-native-community/eslint-config": "^0.0.5",
+    "@types/jest": "^26.0.3",
+    "@types/react": "^16.9.41",
+    "@types/react-native": "^0.62.16",
+    "@types/react-test-renderer": "^16.9.2",
+    "@typescript-eslint/eslint-plugin": "^2.27.0",
+    "@typescript-eslint/parser": "^2.27.0",
     "babel-jest": "^24.9.0",
+    "babel-plugin-module-resolver": "^4.0.0",
     "eslint": "^6.5.1",
     "jest": "^24.9.0",
     "metro-react-native-babel-preset": "^0.58.0",
     "native-base": "^2.13.12",
-    "react-test-renderer": "16.11.0"
+    "react-native-typescript-transformer": "^1.2.13",
+    "react-test-renderer": "16.11.0",
+    "typescript": "^3.9.6"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "jsx",
+      "js",
+      "json",
+      "png",
+      "node"
+    ]
   },
   "proxy": "https://api.alquran.cloud/v1/"
 }
