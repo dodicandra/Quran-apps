@@ -5,7 +5,7 @@ import adds from '../../config.adds.json';
 import admob, {
   MaxAdContentRating,
   InterstitialAd,
-  TestIds,
+  TestIds
 } from '@react-native-firebase/admob';
 
 const uniID = adds.addsIDdodi;
@@ -28,7 +28,7 @@ export const fireAdds = async () => {
     .setRequestConfiguration({
       maxAdContentRating: MaxAdContentRating.PG,
       tagForChildDirectedTreatment: true,
-      tagForUnderAgeOfConsent: true,
+      tagForUnderAgeOfConsent: true
     })
     .then(respons => {
       // Request config successfully set!

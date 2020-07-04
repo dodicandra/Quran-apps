@@ -1,12 +1,14 @@
-import { AdEventType } from '@react-native-firebase/admob';
-import { StackScreenProps } from '@react-navigation/stack';
+import {AdEventType} from '@react-native-firebase/admob';
+import {StackScreenProps} from '@react-navigation/stack';
 import axios from 'axios';
-import { View } from 'native-base';
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, BackHandler, StyleSheet } from 'react-native';
-import { StackRootTypes } from 'src/router/root';
-import { AyatTypes, CardDetailSurah } from '../Components';
-import { fireAddsIn } from '../utils/adds';
+import {View} from 'native-base';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, BackHandler, StyleSheet} from 'react-native';
+import {AyatTypes, CardDetailSurah} from 'Components';
+import {StackRootTypes} from 'router';
+
+//@ts-ignore
+import {fireAddsIn} from 'utils';
 
 export interface DataAyahsTypes {
   englishName?: string;
@@ -14,7 +16,7 @@ export interface DataAyahsTypes {
   ayahs?: AyatTypes[];
 }
 
-type SurahProps =  StackScreenProps<StackRootTypes<{id:string}>,'Surahs'>;
+type SurahProps = StackScreenProps<StackRootTypes<{id: string}>, 'Surahs'>;
 
 const Surahs: React.FC<SurahProps> = ({route}) => {
   const param = route.params;
@@ -25,7 +27,7 @@ const Surahs: React.FC<SurahProps> = ({route}) => {
   useEffect(() => {
     const addListener = () => {
       try {
-        fireAddsIn.onAdEvent(async (type, error) => {
+        fireAddsIn.onAdEvent(async (type: string, error: any) => {
           if (type === AdEventType.LOADED) {
             console.log('loaded ==>', type);
           }
@@ -61,7 +63,7 @@ const Surahs: React.FC<SurahProps> = ({route}) => {
   const getData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`surah/${param?.id}/ar.alafasy`);
+      const response = await axios.get(`surah/${param!.id}/ar.alafasy`);
       const result = await response.data.data;
       setData(result);
       setLoading(false);
@@ -93,7 +95,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginTop: 22,
+    marginTop: 22
   },
   modalView: {
     margin: 20,
@@ -107,12 +109,12 @@ const styles = StyleSheet.create({
     height: '30%',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   openButton: {
     borderRadius: 100,
@@ -121,17 +123,17 @@ const styles = StyleSheet.create({
     width: 70,
     elevation: 2,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   textStyle: {
     color: 'white',
     fontWeight: 'bold',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   modalText: {
     marginBottom: 15,
-    textAlign: 'center',
-  },
+    textAlign: 'center'
+  }
 });
 
 export default Surahs;

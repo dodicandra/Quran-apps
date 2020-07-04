@@ -22,7 +22,7 @@ const Root = () => {
         options={{
           title: 'Surat',
           headerLeft: () => null,
-          headerTitleStyle: {textAlign: 'center'},
+          headerTitleStyle: {textAlign: 'center'}
         }}
         component={Surahs}
       />

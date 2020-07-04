@@ -17,8 +17,8 @@ import {
   NativeSyntheticEvent,
   TextInputChangeEventData
 } from 'react-native';
+import {Mosque} from 'assets';
 import {DigitalClock, CardSurat} from 'components';
-import {Mosque} from 'asset';
 
 const {width} = Dimensions.get('window');
 

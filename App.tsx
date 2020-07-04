@@ -1,8 +1,8 @@
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import Root from './src/router/root';
 import axios from 'axios';
 import {YellowBox} from 'react-native';
+import {Root} from 'router';
 
 axios.defaults.baseURL = 'https://api.alquran.cloud/v1/';
 
