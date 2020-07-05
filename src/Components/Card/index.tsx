@@ -1,6 +1,6 @@
 import {Body, Card, CardItem, Content, Text, View} from 'native-base';
 import React, {useState, useCallback} from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity, useWindowDimensions} from 'react-native';
 
 import IconsPlay from '../IconPlay';
 
@@ -12,9 +12,9 @@ interface CardSurahProps {
 
 export interface AyatTypes {
   number?: number;
-  numberInSurah?: number;
+  numberInSurah: string;
   text?: string;
-  audio?: string;
+  audio: string;
 }
 
 interface CardDetailProps {
@@ -29,6 +29,8 @@ const compare = (prev: any, next: any) => {
 
 export const CardSurat: React.FC<CardSurahProps> = React.memo(
   ({title, name, onPress}) => {
+    const {width, height, fontScale} = useWindowDimensions();
+
     return (
       <TouchableOpacity onPress={onPress}>
         <Card style={styles.leftColor}>
@@ -37,8 +39,12 @@ export const CardSurat: React.FC<CardSurahProps> = React.memo(
               justifyContent: 'space-between',
               flex: 1
             }}>
-            <Text style={styles.title}>{title}</Text>
-            <Text style={styles.surah}>{name}</Text>
+            <Text style={[styles.title, {fontSize: fontScale + 20}]}>
+              {title}
+            </Text>
+            <Text style={[styles.surah, {fontSize: fontScale + 20}]}>
+              {name}
+            </Text>
           </CardItem>
         </Card>
       </TouchableOpacity>
@@ -50,10 +56,9 @@ export const CardSurat: React.FC<CardSurahProps> = React.memo(
 export const CardDetailSurah: React.FC<CardDetailProps> = React.memo(
   ({title, name, ayat}) => {
     const [selected, setSelected] = useState(true);
-    console.log('selec ==>', selected);
     const onSelected = useCallback(() => {
-      setSelected(cur => !cur);
-    }, []);
+      setSelected(!selected);
+    }, [selected]);
 
     return (
       <Content showsVerticalScrollIndicator={false}>
@@ -105,8 +110,8 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 10
   },
-  title: {fontSize: 20, color: '#5067FF', fontWeight: '700'},
-  surah: {fontSize: 18, fontWeight: '700', color: '#5067FF'},
+  title: {color: '#5067FF', fontWeight: '700'},
+  surah: {fontWeight: '700', color: '#5067FF'},
   nomerAyat: {
     marginBottom: 10,
     position: 'relative'

@@ -23,7 +23,7 @@ export const requesAdds = async () => {
   }
 };
 
-export const fireAdds = async () => {
+export const fireAdds = async (): Promise<void> => {
   admob()
     .setRequestConfiguration({
       maxAdContentRating: MaxAdContentRating.PG,
@@ -33,6 +33,10 @@ export const fireAdds = async () => {
     .then(respons => {
       // Request config successfully set!
       console.log(respons);
+      return respons;
+    })
+    .catch(err => {
+      console.log(err);
     });
 };
 

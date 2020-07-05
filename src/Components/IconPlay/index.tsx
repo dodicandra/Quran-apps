@@ -1,6 +1,6 @@
 import {Icon} from 'native-base';
-import React, {useCallback, useEffect, useState} from 'react';
-import {Animated, StyleSheet} from 'react-native';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {Animated, StyleSheet, TouchableOpacity} from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 
 interface IconsProps {
@@ -10,10 +10,12 @@ interface IconsProps {
   selected?: boolean;
 }
 
+const AnimatedTouch = Animated.createAnimatedComponent(TouchableOpacity);
+
 const IconsPlay: React.FC<IconsProps> = ({audio, id, cb, selected}) => {
   const [playing, setPlay] = useState(selected);
   const anScale = new Animated.Value(0);
-
+  const ref = useRef<Icon>(null);
   const play = async (number: string, url: string) => {
     try {
       await TrackPlayer.setupPlayer();
@@ -24,12 +26,11 @@ const IconsPlay: React.FC<IconsProps> = ({audio, id, cb, selected}) => {
       console.log(error);
     }
   };
-  console.log('playing', playing);
   useEffect(() => {
     if (playing === false && selected === true) {
-      setPlay(crr => !crr);
+      setPlay(curen => !curen);
     }
-  }, [playing, selected]);
+  }, [selected]);
 
   const togglePlay = () => {
     play(id, audio);
@@ -38,6 +39,7 @@ const IconsPlay: React.FC<IconsProps> = ({audio, id, cb, selected}) => {
   };
 
   const togglePause = () => {
+    console.log();
     TrackPlayer.pause();
     setPlay(!playing);
     cb();
@@ -57,7 +59,7 @@ const IconsPlay: React.FC<IconsProps> = ({audio, id, cb, selected}) => {
   }, [spring, playing]);
 
   return (
-    <Animated.View style={{transform: [{scale: anScale}]}}>
+    <React.Fragment>
       {playing ? (
         <Icon
           type="SimpleLineIcons"
@@ -66,14 +68,21 @@ const IconsPlay: React.FC<IconsProps> = ({audio, id, cb, selected}) => {
           onPress={togglePlay}
         />
       ) : (
-        <Icon
-          type="SimpleLineIcons"
-          name="control-pause"
-          style={styles.Icons}
-          onPress={togglePause}
-        />
+        <AnimatedTouch
+          accessible
+          accessibilityLabel="icon"
+          testID="icon"
+          style={{transform: [{scale: anScale}]}}>
+          <Icon
+            ref={ref}
+            type="SimpleLineIcons"
+            name="control-pause"
+            style={styles.Icons}
+            onPress={togglePause}
+          />
+        </AnimatedTouch>
       )}
-    </Animated.View>
+    </React.Fragment>
   );
 };
 

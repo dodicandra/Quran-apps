@@ -4,8 +4,8 @@ import Home from '../Screen/Home';
 import Surahs from '../Screen/Surahs';
 
 export type StackRootTypes<T = object> = {
-  Home?: T | undefined;
-  Surahs?: T | undefined;
+  Home: T;
+  Surahs: T;
 };
 const RootStack = createStackNavigator<StackRootTypes>();
 

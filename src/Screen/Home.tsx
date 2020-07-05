@@ -1,26 +1,26 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import {StackScreenProps} from '@react-navigation/stack';
+import {Mosque} from 'assets';
 import axios from 'axios';
+import {CardSurat, DigitalClock} from 'components';
 import {Icon, Input, Item} from 'native-base';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState, useMemo} from 'react';
 import {
   ActivityIndicator,
   Alert,
   Animated,
-  Dimensions,
   Keyboard,
+  NativeSyntheticEvent,
   Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
-  View,
-  NativeSyntheticEvent,
-  TextInputChangeEventData
+  TextInputChangeEventData,
+  useWindowDimensions,
+  View
 } from 'react-native';
-import {Mosque} from 'assets';
-import {DigitalClock, CardSurat} from 'components';
-
-const {width} = Dimensions.get('window');
+import {StackRootTypes} from 'router';
+import {useKeyboard} from 'utils';
 
 type Event = NativeSyntheticEvent<TextInputChangeEventData>;
 interface DataTypes {
@@ -29,30 +29,21 @@ interface DataTypes {
   englishName: string;
 }
 
-const Home = () => {
+type HomeProps = StackScreenProps<StackRootTypes, 'Surahs'>;
+
+const Home: React.FC<HomeProps> = ({navigation}) => {
   const [data, setData] = useState<DataTypes[]>([] as DataTypes[]);
   const [dataFilter, setDataFilter] = useState<{surahs: DataTypes[]}>({
     surahs: []
   });
   const [loading, setLoading] = useState(false);
   const [isKeyboardShow, setKeyboardShow] = useState(false);
-  const navigation = useNavigation();
+  const meo = useWindowDimensions().width;
+
+  const width = useMemo(() => meo, [meo]);
 
   const yScroll = useRef(new Animated.Value(0)).current;
   const timing = useRef(new Animated.Value(120)).current;
-
-  useEffect(() => {
-    const keyboardAction = Platform.OS === 'ios' ? 'Will' : 'Did';
-    //@ts-ignore
-    Keyboard.addListener(`keyboard${keyboardAction}Show`, keyboardDidShow);
-    //@ts-ignore
-    Keyboard.addListener(`keyboard${keyboardAction}Hide`, keyboardDidHide);
-
-    return () => {
-      Keyboard.removeAllListeners(`keyboard${keyboardAction}Show`);
-      Keyboard.removeAllListeners(`keyboard${keyboardAction}Hide`);
-    };
-  });
 
   const keyboardDidShow = () => {
     setKeyboardShow(true);
@@ -150,6 +141,8 @@ const Home = () => {
     return () => setOffLine;
   });
 
+  useKeyboard(keyboardDidShow, keyboardDidHide);
+
   return (
     <View style={{flex: 1}}>
       <StatusBar
@@ -162,10 +155,10 @@ const Home = () => {
           source={Mosque}
           style={[
             styles.homeCard,
-            {height: isKeyboardShow ? timing : HeaderHeight}
+            {height: isKeyboardShow ? timing : HeaderHeight, width}
           ]}
         />
-        <View style={styles.containerCard}>
+        <View style={[styles.containerCard, {width}]}>
           <DigitalClock />
           <Item style={styles.searchInput}>
             <Icon name="ios-search" />
@@ -223,7 +216,6 @@ const styles = StyleSheet.create({
     flex: 1
   },
   homeCard: {
-    width: width,
     backgroundColor: '#aeaeae',
     marginBottom: 10,
     borderBottomLeftRadius: 8,
@@ -238,8 +230,7 @@ const styles = StyleSheet.create({
   containerCard: {
     padding: 10,
     position: 'absolute',
-    bottom: 15,
-    width
+    bottom: 15
   },
   times: {marginBottom: 20, fontSize: 25, fontWeight: 'bold'}
 });

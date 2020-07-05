@@ -18,8 +18,8 @@ export interface DataAyahsTypes {
 
 type SurahProps = StackScreenProps<StackRootTypes<{id: string}>, 'Surahs'>;
 
-const Surahs: React.FC<SurahProps> = ({route}) => {
-  const param = route.params;
+const Surahs: React.FC<SurahProps> = ({route, navigation}) => {
+  const {id} = route.params;
 
   const [data, setData] = useState<DataAyahsTypes>([] as DataAyahsTypes);
   const [loding, setLoading] = useState(false);
@@ -50,7 +50,7 @@ const Surahs: React.FC<SurahProps> = ({route}) => {
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => {
       fireAddsIn.show().catch(err => console.log(err));
-      // navigation.goBack();
+      navigation.goBack();
       return true;
     });
     getData();
@@ -63,7 +63,7 @@ const Surahs: React.FC<SurahProps> = ({route}) => {
   const getData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`surah/${param!.id}/ar.alafasy`);
+      const response = await axios.get(`surah/${id}/ar.alafasy`);
       const result = await response.data.data;
       setData(result);
       setLoading(false);
