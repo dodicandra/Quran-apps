@@ -3,37 +3,65 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "npx react-native run-android",
     "ios": "react-native run-ios",
-    "start": "react-native start",
+    "start": "npx react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "release": "npx react-native run-android --variant=release",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.10.1",
     "@react-native-community/masked-view": "^0.1.10",
+    "@react-native-firebase/admob": "^7.1.0",
+    "@react-native-firebase/app": "^7.1.0",
     "@react-navigation/bottom-tabs": "^5.4.2",
     "@react-navigation/native": "^5.3.0",
     "@react-navigation/stack": "^5.3.3",
+    "axios": "^0.19.2",
+    "core-js": "^3.6.5",
+    "jetifier": "^1.6.5",
+    "moment": "^2.25.3",
     "react": "16.11.0",
     "react-native": "0.62.2",
+    "react-native-admob": "^2.0.0-alpha.4",
     "react-native-gesture-handler": "^1.6.1",
+    "react-native-module": "0.0.1",
     "react-native-reanimated": "^1.8.0",
     "react-native-safe-area-context": "^1.0.0",
-    "react-native-screens": "^2.7.0"
+    "react-native-screens": "^2.7.0",
+    "react-native-track-player": "^1.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
     "@babel/runtime": "^7.6.2",
     "@react-native-community/eslint-config": "^0.0.5",
+    "@types/jest": "^26.0.3",
+    "@types/react": "^16.9.41",
+    "@types/react-native": "^0.62.16",
+    "@types/react-test-renderer": "^16.9.2",
+    "@typescript-eslint/eslint-plugin": "^2.27.0",
+    "@typescript-eslint/parser": "^2.27.0",
     "babel-jest": "^24.9.0",
+    "babel-plugin-module-resolver": "^4.0.0",
     "eslint": "^6.5.1",
     "jest": "^24.9.0",
     "metro-react-native-babel-preset": "^0.58.0",
     "native-base": "^2.13.12",
+    "react-native-typescript-transformer": "^1.2.13",
     "react-test-renderer": "16.11.0",
-    "styled-components": "^5.1.0"
+    "typescript": "^3.9.6"
   },
   "jest": {
-    "preset": "react-native"
-  }
+    "preset": "react-native",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "jsx",
+      "js",
+      "json",
+      "node"
+    ]
+  },
+  "proxy": "https://api.alquran.cloud/v1/"
 }

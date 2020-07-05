@@ -1,7 +1,7 @@
 # OSX
 #
 .DS_Store
-
+.jest/
 # Xcode
 #
 build/
@@ -40,6 +40,8 @@ buck-out/
 \.buckd/
 *.keystore
 !debug.keystore
+package-lock.json
+config.adds.json
 
 # fastlane
 #
