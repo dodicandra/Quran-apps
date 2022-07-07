@@ -21,7 +21,7 @@
     "axios": "^0.19.2",
     "core-js": "^3.6.5",
     "jetifier": "^1.6.5",
-    "moment": "^2.25.3",
+    "moment": "^2.29.4",
     "react": "16.11.0",
     "react-native": "0.62.2",
     "react-native-admob": "^2.0.0-alpha.4",
